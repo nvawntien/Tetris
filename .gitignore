@@ -1,0 +1,21 @@
+# Bỏ qua thư mục build và file biên dịch
+/build/
+*.o
+*.exe
+*.so
+*.dylib
+
+# Bỏ qua file tạm, log, cache
+*.log
+*.tmp
+*.cache
+
+# Bỏ qua file của các IDE và editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Bỏ qua file hệ thống
+.DS_Store
+Thumbs.db
