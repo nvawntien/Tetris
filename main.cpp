@@ -1,18 +1,30 @@
 #include "utils.h"
 #include "game.h"
+#include "AssetManager.h"
 
 int main(int argc, char* argv[]) {
-    Util *util = new Util;
     Game *player = new Game;
+    player -> InitGame();
 
-    if (player -> initGame()) {
-        while (player -> menu()) {
-            while (player -> isRunning()) {
-                player -> Event();
-            }
+    while (player -> isRunning()) {
+        switch (player -> gameState) {
+            case MENU:
+                while (player -> Menu());
+                break;
+            case PLAYING:
+                while (player -> GamePlay());
+                break;
+            case PAUSE:
+                while (player -> GamePause());
+                break;
+            case GAME_OVER:
+                while (player -> GameOver());
+                break;
         }
     }
     
-    util -> quitSDL(util -> window, util -> renderer);
+    Util :: getInstance().quitSDL();
+    AssetManager :: getInstance().clean();
+    delete player;
     return 0;
 }
