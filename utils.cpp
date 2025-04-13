@@ -1,46 +1,40 @@
 #include "utils.h"
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-const int BLOCK_SIZE = 25;
-const int GRID_WIDTH = 10;
-const int GRID_HEIGHT = 20;
-const char* WINDOW_TITLE = "TETRIS GAME";
-
-Util& Util :: getInstance() {
-    static Util instance;
+Utils& Utils :: getInstance() {
+    static Utils instance;
     return instance;
 }
 
-SDL_Window* Util :: getWindow() {
+SDL_Window* Utils :: getWindow() {
     return window;
 }
 
-SDL_Renderer* Util :: getRenderer() {
+SDL_Renderer* Utils :: getRenderer() {
     return renderer;
 }
 
-TTF_Font* Util :: getFont() {
+TTF_Font* Utils :: getFont() {
     return font;
 }
 
-void Util :: initSDL() {
+void Utils :: initSDL() {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     SDL_Init(SDL_INIT_EVERYTHING);
 
     window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    font = TTF_OpenFont("font/MuseoSans500.otf", 30);
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    font = TTF_OpenFont("font/Museo700.otf", 30);
 }
 
-void Util :: quitSDL() {
+void Utils :: quitSDL() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
 }
 
-SDL_Texture* Util::loadImage(const std :: string &path) {
+SDL_Texture* Utils::loadImage(const std :: string &path) {
     SDL_Texture *newTexture = nullptr;
     SDL_Surface *loadedSurface = IMG_Load(path.c_str());
     newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);   
@@ -48,8 +42,8 @@ SDL_Texture* Util::loadImage(const std :: string &path) {
     return newTexture;
 }
 
-SDL_Texture* Util::loadText(const std::string& text, SDL_Color color) {
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+SDL_Texture* Utils::loadText(const std::string& text, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer(), surface);
     SDL_FreeSurface(surface);
     return texture;

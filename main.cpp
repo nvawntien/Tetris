@@ -4,12 +4,11 @@
 
 int main(int argc, char* argv[]) {
     Game *player = new Game;
-    player -> InitGame();
 
     while (player -> isRunning()) {
         switch (player -> gameState) {
             case MENU:
-                while (player -> Menu());
+                 while (player -> Menu());
                 break;
             case PLAYING:
                 while (player -> GamePlay());
@@ -23,7 +22,7 @@ int main(int argc, char* argv[]) {
         }
     }
     
-    Util :: getInstance().quitSDL();
+    Utils :: getInstance().quitSDL();
     AssetManager :: getInstance().clean();
     delete player;
     return 0;
