@@ -3,12 +3,38 @@
 #include "utils.h"
 #include "RectLayout.h"
 
+enum TextureType {
+    BACKGROUND = 1 << 0,
+    LOGO = 1 << 1,
+    MATRIX = 1 << 2,
+    PLAY  = 1 << 3,
+    LEVEL  = 1 << 4,
+    PAUSE = 1 << 5,
+    SCORE = 1 << 6,
+    LINES = 1 << 7,
+    TARGET = 1 << 8,
+    L1 = 1,
+    L2 = 2,
+    L3 = 3,
+};
+
+enum BlockType {
+    I = 1,
+    Z = 2,
+    J = 3,
+    L = 4,
+    O = 5,
+    S = 6,
+    T = 7
+};
+
+
 class AssetManager {
     public:
         static AssetManager& getInstance();
         void loadAssets();
         void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level);
-        void RenderAssetGame();
+        void RenderAssetGame(int score, int level, int lines);
         void RenderBlock(int i, int j, int color);
         SDL_Rect getRect();
         void clean();
@@ -17,8 +43,11 @@ class AssetManager {
         ~AssetManager() = default; // Destructor privatw
         AssetManager(const AssetManager&) = delete;
         AssetManager& operator=(const AssetManager&) = delete;
-        std :: unordered_map <std :: string, SDL_Texture*> Image, Text;
-        std :: unordered_map <int, SDL_Texture*> Block; 
+        std :: unordered_map <int, SDL_Texture*> Image;
+        std :: unordered_map <int, SDL_Texture*> Text;
+        std :: unordered_map <int, SDL_Texture*> Block;
+        int prevScore = -1; 
+        int prelineCleared = -1;
 };
 
 #endif

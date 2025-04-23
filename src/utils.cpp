@@ -13,10 +13,6 @@ SDL_Renderer* Utils :: getRenderer() {
     return renderer;
 }
 
-TTF_Font* Utils :: getFont() {
-    return font;
-}
-
 void Utils :: initSDL() {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
@@ -25,7 +21,8 @@ void Utils :: initSDL() {
     window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    font = TTF_OpenFont("font/Museo700.otf", 30);
+    font = TTF_OpenFont(FONTS_PATH"MuseoSans500.otf", 33);
+    font1 = TTF_OpenFont(FONTS_PATH"MuseoSans500.otf", 24);
 }
 
 void Utils :: quitSDL() {
@@ -44,6 +41,13 @@ SDL_Texture* Utils::loadImage(const std :: string &path) {
 
 SDL_Texture* Utils::loadText(const std::string& text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer(), surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
+SDL_Texture* Utils :: loadStats(const std::string& text, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Blended(font1, text.c_str(), color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer(), surface);
     SDL_FreeSurface(surface);
     return texture;

@@ -19,8 +19,10 @@ class Tetromino {
     private:
         static const int figure[7][4];
         std :: vector <int> bag;
+        std :: deque <int> previewQueue;
         int bagIndex;
         void refillBag();
+        void initQueue();
 };
 
 #endif

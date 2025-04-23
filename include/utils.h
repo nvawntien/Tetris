@@ -1,5 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -8,28 +9,19 @@
 #include <random>
 #include <ctime>
 #include <unordered_map>
-
-
-constexpr int SCREEN_WIDTH = 800;
-constexpr int SCREEN_HEIGHT = 600;
-constexpr int BLOCK_SIZE = 25;
-constexpr int CELL_WIDTH = 10;
-constexpr int CELL_HEIGHT = 20;
-constexpr int GRID_WIDTH = 272;
-constexpr int GRID_HEIGHT = 534;
-constexpr const char* WINDOW_TITLE = "TETRIS GAME";
+#include <deque>
+#include "constants.h"
 
 class Utils {
     public:
         static Utils& getInstance();
         SDL_Window *getWindow();
         SDL_Renderer *getRenderer();
-        TTF_Font *getFont();
         void initSDL();
         void quitSDL();
         SDL_Texture *loadImage(const std :: string &path);
         SDL_Texture *loadText(const std :: string &text, SDL_Color color);
-
+        SDL_Texture *loadStats(const std :: string &text, SDL_Color color);
     private:
         Utils() = default;
         ~Utils() = default;
@@ -40,6 +32,7 @@ class Utils {
         SDL_Window* window = nullptr;
         SDL_Renderer* renderer = nullptr;
         TTF_Font *font = nullptr;
+        TTF_Font *font1 = nullptr;
 };
 
 #endif

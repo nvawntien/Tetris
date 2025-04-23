@@ -7,6 +7,7 @@
 
 point temp[4], backup[4];
 int grid[CELL_HEIGHT][CELL_WIDTH] = {{0}};
+int girdNextBlock[5][8] = {{0}};
 
 const int Tetromino :: figure[7][4] = {
     {0, 1, 2, 3}, // I
@@ -21,6 +22,7 @@ const int Tetromino :: figure[7][4] = {
 Tetromino :: Tetromino() {
     bagIndex = 0;
     refillBag();
+    initQueue();
     nextTetromino();
 }
 
@@ -31,23 +33,30 @@ void Tetromino :: refillBag() {
     bagIndex = 0;
 }
 
-void Tetromino :: nextTetromino() {
-    if (bagIndex >= bag.size()) {
-        refillBag();
+void Tetromino::initQueue() {
+    for (int i = 0; i < 3; ++i) {
+        if (bagIndex >= bag.size()) refillBag();
+        previewQueue.push_back(bag[bagIndex++]);
     }
+}
 
-    int random = bag[bagIndex++];
-    color = random + 1;
+void Tetromino :: nextTetromino() {
+    int id = previewQueue.front();
+    previewQueue.pop_front();
+    color = id + 1;
 
     for (int i = 0; i < 4; i++) {
-        temp[i].x = figure[random][i] % 4  + 3;
-        temp[i].y = figure[random][i] / 4;
+        temp[i].x = figure[id][i] % 4  + 3;
+        temp[i].y = figure[id][i] / 4;
     }
+
+    if (bagIndex >= bag.size()) refillBag();
+    previewQueue.push_back(bag[bagIndex++]);
 }
 
 bool Tetromino :: checkCollision() {
     for (int i = 0; i < 4; i++) {
-        if (temp[i].x < 0 || temp[i].x >= CELL_WIDTH || temp[i].y >= CELL_HEIGHT) {
+        if (temp[i].x < 0 || temp[i].x >= CELL_WIDTH || temp[i].y >= CELL_HEIGHT || temp[i].y < 0) {
             return true;
         }
         // va cham voi block khac
@@ -60,7 +69,7 @@ bool Tetromino :: checkCollision() {
 }
 
 void Tetromino::rotate() {
-    point pivot = temp[2]; // chọn ô thứ 3 làm tâm xoay
+    point pivot = temp[(bag[bagIndex-1] == 0) ? 1 : 2]; // chọn ô thứ 3 làm tâm xoay
     for (int i = 0; i < 4; i++) {
         int x = temp[i].x - pivot.x;
         int y = temp[i].y - pivot.y;
@@ -72,10 +81,12 @@ void Tetromino::rotate() {
     if (checkCollision()) {
         // thử wall kick đơn giản
         const int kicks[] = {-1, 1, -2, 2};  // thử dịch sang trái/phải 1–2 ô
+
         for (int k = 0; k < 4; ++k) {
             for (int i = 0; i < 4; ++i) temp[i].x += kicks[k];
             if (!checkCollision()) return; // nếu hợp lệ thì giữ nguyên
             for (int i = 0; i < 4; ++i) temp[i].x -= kicks[k]; // hoàn tác
+
         }
 
         // nếu không hợp lệ sau khi thử tất cả, thì hủy xoay

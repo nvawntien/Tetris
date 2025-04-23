@@ -15,7 +15,7 @@ bool Game::Menu() {
     SDL_Event event;
 
     const SDL_Rect& playRect = RectLayout::getInstance().getButtonPlayRect();
-    const SDL_Rect& levelRect = RectLayout::getInstance().getButtonLeverRect();
+    const SDL_Rect& levelRect = RectLayout::getInstance().getButtonLevelRect();
 
     ButtonState playState = NORMAL;
     ButtonState levelState = NORMAL;
@@ -132,11 +132,13 @@ void Game :: processGameLogic() {
     move_x = 0;
     if (level == 1) delay = 500;
     else if (level == 2) delay = 300;
-    else delay = 200;
+    else delay = 100;
     rotate = false;
 }
 
 void Game :: clearFullLines() {
+    int currentlinesCleared = 0;
+
     for (int y = CELL_HEIGHT - 1; y >= 0; y--) {
         bool full = true;
 
@@ -148,6 +150,7 @@ void Game :: clearFullLines() {
         }
 
         if (full) {
+            currentlinesCleared++;
             // dời tất cả dòng bên trên xuống dưới
             for (int row = y; row > 0; row--) {
                 for (int col = 0; col < CELL_WIDTH; col++) {
@@ -164,6 +167,15 @@ void Game :: clearFullLines() {
             y++;
         }
     }
+    // calculate scores
+    linesCleared += currentlinesCleared;
+    switch (currentlinesCleared) {
+        case 1: score += 40 * (level + 1); break;
+        case 2: score += 100 * (level + 1); break;
+        case 3: score += 300 * (level + 1); break;
+        case 4: score += 1200 * (level + 1); break;
+        default: break;
+    }
 }
 
 void Game :: checkGameOver() {
@@ -171,7 +183,7 @@ void Game :: checkGameOver() {
     for (int i = 0; i < CELL_HEIGHT; i++) {
         for (int j = 0; j < CELL_WIDTH; j++) {
             if (grid[i][j]) {
-                game_over_count++;
+                game_over_count++; 
                 break;
             }
         }
@@ -184,7 +196,7 @@ void Game :: checkGameOver() {
 
 void Game :: updateRenderer() {
     SDL_RenderClear(Utils :: getInstance().getRenderer());  
-    AssetManager :: getInstance().RenderAssetGame();
+    AssetManager :: getInstance().RenderAssetGame(score, level, linesCleared);
 
     for (int i = 0; i < CELL_HEIGHT; i++) {
         for (int j = 0; j < CELL_WIDTH; j++) {

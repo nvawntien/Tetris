@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
             case PLAYING:
                 while (player -> GamePlay());
                 break;
-            case PAUSE:
+            case PAUSING:
                 while (player -> GamePause());
                 break;
             case GAME_OVER:

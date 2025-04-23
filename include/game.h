@@ -7,7 +7,7 @@
 enum GameState {
     MENU,
     PLAYING,
-    PAUSE,
+    PAUSING,
     GAME_OVER
 };
 
@@ -33,6 +33,8 @@ class Game {
         bool rotate = false;
         int move_x = 0;
         int level = 1;
+        int score = 0;
+        int linesCleared = 0;
 };
 
 
