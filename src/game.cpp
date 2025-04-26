@@ -74,6 +74,18 @@ void Game :: setCurrentTime(Uint32 T) {
     currentTime = T;
 }
 
+void Game :: PerformHoldBlock() {
+    if (!hasHold) {
+        holdBlock = currentBlock;
+        currentBlock.nextTetromino();
+        holdUsed = false;
+        hasHold = true;
+    } 
+    else {
+        std :: swap(currentBlock, holdBlock);
+        currentBlock.reset();
+    }
+}
 void Game :: Event() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -99,6 +111,11 @@ void Game :: Event() {
             case SDLK_SPACE:
                 hardDrop = true;
                 break;
+            case SDLK_c:
+                if (!holdUsed) {
+                    PerformHoldBlock();
+                    holdUsed = true;
+                }
             }
        }
     }
@@ -129,6 +146,7 @@ void Game :: processGameLogic() {
         }
         currentBlock.nextTetromino();
         hardDrop = false;
+        holdUsed = false;
     }
     else if (currentTime - lastTime > delay) {
         lastTime = currentTime;
@@ -141,6 +159,7 @@ void Game :: processGameLogic() {
                 grid[backup[i].y][backup[i].x] = currentBlock.color; // save color
             }
             currentBlock.nextTetromino();
+            holdUsed = false;
         }
     }
 
@@ -213,8 +232,10 @@ void Game :: updateRenderer() {
     SDL_RenderClear(Utils :: getInstance().getRenderer());  
     AssetManager :: getInstance().RenderAssetGame(score, level, linesCleared);
 
+    if (hasHold) {
+        AssetManager :: getInstance().RenderHoldBlock(holdBlock.color);
+    }
     // render next block
-
     for (int i = 0; i < 3; i++) {
         AssetManager :: getInstance().RenderNextBlock(previewQueue[i]+1, i);
     }

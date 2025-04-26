@@ -109,6 +109,10 @@ void AssetManager :: RenderAssetGame(int score, int level, int lines) {
     SDL_RenderCopy(renderer, Text[LINES], NULL, &RectLayout :: getInstance().getLinesRect(Text[LINES]));
 }
 
+void AssetManager :: RenderHoldBlock(int color) {
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Whole_Block[color], NULL, &RectLayout :: getInstance().getHoldRect(Whole_Block[color]));
+}
+
 void AssetManager :: RenderNextBlock(int color, int i) {
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Whole_Block[color], NULL, &RectLayout :: getInstance().getNextRect(Whole_Block[color], i));
 }

@@ -21,6 +21,7 @@ class Game {
         bool GamePause();
         bool GameOver();
     private:
+        void PerformHoldBlock();
         void setCurrentTime(Uint32 T);
         void Event();
         void processGameLogic();
@@ -29,7 +30,9 @@ class Game {
         void updateRenderer();
         bool running = true, isGameRunning = true, isMenuRunning = true;
         Uint32 currentTime = 0, lastTime = 0, delay = 500;
-        Tetromino currentBlock;
+        Tetromino currentBlock, holdBlock;
+        bool holdUsed = false;
+        bool hasHold = false;
         bool rotate = false;
         bool hardDrop = false;
         int move_x = 0;

@@ -36,6 +36,7 @@ class AssetManager {
         void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level);
         void RenderAssetGame(int score, int level, int lines);
         void RenderNextBlock(int color, int i);
+        void RenderHoldBlock(int color);
         void RenderNormalBlock(int x, int y, int color);
         void RenderGhostBlock(int x, int y, int color);
         void RenderLockedBlock(int x, int y, int color);

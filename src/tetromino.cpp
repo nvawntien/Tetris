@@ -55,6 +55,13 @@ void Tetromino :: nextTetromino() {
     previewQueue.push_back(bag[bagIndex++]);
 }
 
+void Tetromino :: reset() {
+    for (int i = 0; i < 4; i++) {
+        temp[i].x = figure[color-1][i] % 4 + 3;
+        temp[i].y = figure[color-1][i] / 4;
+    }
+}
+
 bool Tetromino :: checkCollision(const point (&positions)[4]) {
     for (int i = 0; i < 4; i++) {
         if (positions[i].x < 0 || positions[i].x >= CELL_WIDTH || positions[i].y >= CELL_HEIGHT || positions[i].y < 0) {

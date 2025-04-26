@@ -49,6 +49,16 @@ SDL_Rect& RectLayout :: getMatrixRect() {
     return matrix;
 }
 
+SDL_Rect& RectLayout :: getHoldRect(SDL_Texture* texture) {
+    int _w = 0, _h = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &_w, &_h);
+    int xx = HOLD_POS_X + (BLOCK_WIDTH - _w) / 2;
+    int yy = HOLD_POS_Y + (BLOCK_HEIGHT - _h) / 2;
+
+    holdRect = {xx, yy, _w, _h};
+    return holdRect;
+}
+
 SDL_Rect& RectLayout :: getNextRect(SDL_Texture* texture, int i) {
     int _w = 0, _h = 0;
     SDL_QueryTexture(texture, NULL, NULL, &_w, &_h);
