@@ -35,7 +35,9 @@ class AssetManager {
         void loadAssets();
         void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level);
         void RenderAssetGame(int score, int level, int lines);
-        void RenderBlock(int i, int j, int color);
+        void RenderNormalBlock(int x, int y, int color);
+        void RenderGhostBlock(int x, int y, int color);
+        void RenderLockedBlock(int x, int y, int color);
         SDL_Rect getRect();
         void clean();
     private:
@@ -45,7 +47,7 @@ class AssetManager {
         AssetManager& operator=(const AssetManager&) = delete;
         std :: unordered_map <int, SDL_Texture*> Image;
         std :: unordered_map <int, SDL_Texture*> Text;
-        std :: unordered_map <int, SDL_Texture*> Block;
+        std :: unordered_map <int, SDL_Texture*> Normal_Block, Ghost_Block, Locked_Block;
         int prevScore = -1; 
         int prelineCleared = -1;
 };

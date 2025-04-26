@@ -109,7 +109,7 @@ void Game :: processGameLogic() {
         temp[i].x += move_x;
     }
 
-    if (currentBlock.checkCollision()) {
+    if (currentBlock.checkCollision(temp)) {
         for (int i = 0; i < 4; i++) temp[i] = backup[i];
     }
 
@@ -121,7 +121,7 @@ void Game :: processGameLogic() {
             temp[i].y += 1;
         }
 
-        if (currentBlock.checkCollision()) {
+        if (currentBlock.checkCollision(temp)) {
             for (int i = 0; i < 4; i++) {
                 grid[backup[i].y][backup[i].x] = currentBlock.color; // save color
             }
@@ -201,13 +201,24 @@ void Game :: updateRenderer() {
     for (int i = 0; i < CELL_HEIGHT; i++) {
         for (int j = 0; j < CELL_WIDTH; j++) {
             if (grid[i][j]) {
-                AssetManager :: getInstance().RenderBlock(j, i, grid[i][j]);
+                AssetManager :: getInstance().RenderLockedBlock(j, i, grid[i][j]);
             }
         }
     }
+    
+    // render ghost block
+
+    for (int i = 0; i < 4; i++) ghost[i] = temp[i];
+    while (!currentBlock.checkCollision(ghost)) {
+        for (int i = 0; i < 4; i++) ghost[i].y++;
+    }
+    for (int i = 0; i < 4; i++) ghost[i].y--;
+    for (int i = 0; i < 4; i++) {
+        AssetManager :: getInstance().RenderGhostBlock(ghost[i].x, ghost[i].y, currentBlock.color);
+    }
 
     for (int i = 0; i < 4; i++) {
-        AssetManager :: getInstance().RenderBlock(temp[i].x, temp[i].y, currentBlock.color);
+        AssetManager :: getInstance().RenderNormalBlock(temp[i].x, temp[i].y, currentBlock.color);
     }
 
     SDL_RenderPresent(Utils :: getInstance().getRenderer());

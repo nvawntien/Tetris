@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
         switch (player -> gameState) {
             case MENU:
                  while (player -> Menu());
-                break;
+                break; 
             case PLAYING:
                 while (player -> GamePlay());
                 break;
@@ -22,8 +22,8 @@ int main(int argc, char* argv[]) {
         }
     }
     
-    Utils :: getInstance().quitSDL();
     AssetManager :: getInstance().clean();
+    Utils :: getInstance().quitSDL();
     delete player;
     return 0;
 }

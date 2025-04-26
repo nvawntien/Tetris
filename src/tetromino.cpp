@@ -5,7 +5,7 @@
     4 5 6 7
 */
 
-point temp[4], backup[4];
+point temp[4], backup[4], ghost[4];
 int grid[CELL_HEIGHT][CELL_WIDTH] = {{0}};
 int girdNextBlock[5][8] = {{0}};
 
@@ -54,13 +54,13 @@ void Tetromino :: nextTetromino() {
     previewQueue.push_back(bag[bagIndex++]);
 }
 
-bool Tetromino :: checkCollision() {
+bool Tetromino :: checkCollision(const point (&positions)[4]) {
     for (int i = 0; i < 4; i++) {
-        if (temp[i].x < 0 || temp[i].x >= CELL_WIDTH || temp[i].y >= CELL_HEIGHT || temp[i].y < 0) {
+        if (positions[i].x < 0 || positions[i].x >= CELL_WIDTH || positions[i].y >= CELL_HEIGHT || positions[i].y < 0) {
             return true;
         }
         // va cham voi block khac
-        if (grid[temp[i].y][temp[i].x]) {
+        if (grid[positions[i].y][positions[i].x]) {
             return true;
         }
     }
@@ -78,13 +78,13 @@ void Tetromino::rotate() {
         temp[i].y = pivot.y + x;
     }
 
-    if (checkCollision()) {
+    if (checkCollision(temp)) {
         // thử wall kick đơn giản
         const int kicks[] = {-1, 1, -2, 2};  // thử dịch sang trái/phải 1–2 ô
 
         for (int k = 0; k < 4; ++k) {
             for (int i = 0; i < 4; ++i) temp[i].x += kicks[k];
-            if (!checkCollision()) return; // nếu hợp lệ thì giữ nguyên
+            if (!checkCollision(temp)) return; // nếu hợp lệ thì giữ nguyên
             for (int i = 0; i < 4; ++i) temp[i].x -= kicks[k]; // hoàn tác
 
         }

@@ -20,13 +20,29 @@ void AssetManager :: loadAssets() {
     Image[PAUSE|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_PAUSE);
 
 
-    Block[I] = Utils :: getInstance().loadImage(NORMAL_PATH I_PNG);
-    Block[Z] = Utils :: getInstance().loadImage(NORMAL_PATH Z_PNG);
-    Block[J] = Utils :: getInstance().loadImage(NORMAL_PATH J_PNG);
-    Block[L] = Utils :: getInstance().loadImage(NORMAL_PATH L_PNG);
-    Block[O] = Utils :: getInstance().loadImage(NORMAL_PATH O_PNG);
-    Block[S] = Utils :: getInstance().loadImage(NORMAL_PATH S_PNG);
-    Block[T] = Utils :: getInstance().loadImage(NORMAL_PATH T_PNG);
+    Normal_Block[I] = Utils :: getInstance().loadImage(NORMAL_PATH I_PNG);
+    Normal_Block[Z] = Utils :: getInstance().loadImage(NORMAL_PATH Z_PNG);
+    Normal_Block[J] = Utils :: getInstance().loadImage(NORMAL_PATH J_PNG);
+    Normal_Block[L] = Utils :: getInstance().loadImage(NORMAL_PATH L_PNG);
+    Normal_Block[O] = Utils :: getInstance().loadImage(NORMAL_PATH O_PNG);
+    Normal_Block[S] = Utils :: getInstance().loadImage(NORMAL_PATH S_PNG);
+    Normal_Block[T] = Utils :: getInstance().loadImage(NORMAL_PATH T_PNG);
+    
+    Ghost_Block[I] = Utils :: getInstance().loadImage(GHOST_PATH I_PNG);
+    Ghost_Block[Z] = Utils :: getInstance().loadImage(GHOST_PATH Z_PNG);
+    Ghost_Block[J] = Utils :: getInstance().loadImage(GHOST_PATH J_PNG);
+    Ghost_Block[L] = Utils :: getInstance().loadImage(GHOST_PATH L_PNG);
+    Ghost_Block[O] = Utils :: getInstance().loadImage(GHOST_PATH O_PNG);
+    Ghost_Block[S] = Utils :: getInstance().loadImage(GHOST_PATH S_PNG);
+    Ghost_Block[T] = Utils :: getInstance().loadImage(GHOST_PATH T_PNG);
+
+    Locked_Block[I] = Utils :: getInstance().loadImage(LOCKED_PATH I_PNG);
+    Locked_Block[Z] = Utils :: getInstance().loadImage(LOCKED_PATH Z_PNG);
+    Locked_Block[J] = Utils :: getInstance().loadImage(LOCKED_PATH J_PNG);
+    Locked_Block[L] = Utils :: getInstance().loadImage(LOCKED_PATH L_PNG);
+    Locked_Block[O] = Utils :: getInstance().loadImage(LOCKED_PATH O_PNG);
+    Locked_Block[S] = Utils :: getInstance().loadImage(LOCKED_PATH S_PNG);
+    Locked_Block[T] = Utils :: getInstance().loadImage(LOCKED_PATH T_PNG);
 
     SDL_Color color = {255, 255, 255, 255};
     Text[PLAY] = Utils :: getInstance().loadText("PLAY", color);
@@ -46,7 +62,7 @@ void AssetManager::RenderAssetMenu(ButtonState playState, ButtonState levelState
     SDL_RenderClear(renderer);
 
     // Vẽ nền và logo
-    SDL_RenderCopy(renderer, Image[BACKGROUND], NULL, nullptr);
+    SDL_RenderCopy(renderer, Image[BACKGROUND], NULL, NULL);
     SDL_RenderCopy(renderer, Image[LOGO], NULL, &RectLayout::getInstance().getLogoRect());
 
     SDL_RenderCopy(renderer, Image[PLAY|playState], NULL, &RectLayout::getInstance().getButtonPlayRect());
@@ -85,8 +101,16 @@ void AssetManager :: RenderAssetGame(int score, int level, int lines) {
     SDL_RenderCopy(renderer, Text[LINES], NULL, &RectLayout :: getInstance().getLinesRect(Text[LINES]));
 }
 
-void AssetManager :: RenderBlock(int x, int y, int color) {
-    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Block[color], NULL, &(RectLayout :: getInstance().getBlockRect(x, y)));
+void AssetManager :: RenderNormalBlock(int x, int y, int color) {
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Normal_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
+}
+
+void AssetManager :: RenderGhostBlock(int x, int y, int color) {
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Ghost_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
+}
+
+void AssetManager :: RenderLockedBlock(int x, int y, int color) {
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Locked_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
 }
 
 void AssetManager ::  clean() {
@@ -98,11 +122,21 @@ void AssetManager ::  clean() {
         SDL_DestroyTexture(pair.second);
     }
 
-    for (auto &pair : Block) {
+    for (auto &pair : Normal_Block) {
         SDL_DestroyTexture(pair.second);
     }
 
-    Block.clear();
+    for (auto &pair : Ghost_Block) {
+        SDL_DestroyTexture(pair.second);
+    }
+
+    for (auto &pair : Locked_Block) {
+        SDL_DestroyTexture(pair.second);
+    }
+
+    Locked_Block.clear();
+    Normal_Block.clear();
+    Ghost_Block.clear();
     Image.clear();
     Text.clear();
 }

@@ -46,6 +46,8 @@
 #define NORMAL_PATH       IMAGES_PATH "normal/"
 #define HOVER_PATH        IMAGES_PATH "hover/"
 #define DOWN_PATH         IMAGES_PATH "down/"
+#define GHOST_PATH        IMAGES_PATH "ghost/"
+#define LOCKED_PATH       IMAGES_PATH "locked/"
 
 #define BUTTON_PLAY       "button-play.png"
 #define BUTTON_LEVEL      "button-level.png"

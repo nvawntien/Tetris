@@ -53,3 +53,4 @@ SDL_Texture* Utils :: loadStats(const std::string& text, SDL_Color color) {
     return texture;
 }
 
+
