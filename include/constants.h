@@ -12,7 +12,10 @@
 #define MATRIX_HEIGHT 534
 #define MATRIX_POS_X  264
 #define MATRIX_POS_Y  33
-
+#define QUEUE_POS_X   600
+#define QUEUE_POS_Y   105
+#define BLOCK_WIDTH   115
+#define BLOCK_HEIGHT  68
 #define BLOCK_SIZE    25
 #define gridOffsetx   270
 #define gridOffsety   40
@@ -48,6 +51,7 @@
 #define DOWN_PATH         IMAGES_PATH "down/"
 #define GHOST_PATH        IMAGES_PATH "ghost/"
 #define LOCKED_PATH       IMAGES_PATH "locked/"
+#define WHOLE_PATH        IMAGES_PATH "whole/"
 
 #define BUTTON_PLAY       "button-play.png"
 #define BUTTON_LEVEL      "button-level.png"

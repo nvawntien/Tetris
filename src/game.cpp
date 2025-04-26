@@ -198,6 +198,12 @@ void Game :: updateRenderer() {
     SDL_RenderClear(Utils :: getInstance().getRenderer());  
     AssetManager :: getInstance().RenderAssetGame(score, level, linesCleared);
 
+    // render next block
+
+    for (int i = 0; i < 3; i++) {
+        AssetManager :: getInstance().RenderNextBlock(previewQueue[i]+1, i);
+    }
+
     for (int i = 0; i < CELL_HEIGHT; i++) {
         for (int j = 0; j < CELL_WIDTH; j++) {
             if (grid[i][j]) {

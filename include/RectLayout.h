@@ -23,12 +23,14 @@ class RectLayout {
         SDL_Rect& getScoreRect(SDL_Texture* texture);
         SDL_Rect& getLevelRect(SDL_Texture* texture);
         SDL_Rect& getLinesRect(SDL_Texture* texture);
+        SDL_Rect& getNextRect(SDL_Texture* texture, int i);
     private:
         RectLayout() = default;
         ~RectLayout() = default;
         RectLayout(const RectLayout&) = delete;
         RectLayout& operator=(const RectLayout&) = delete;
         SDL_Rect gridRects[CELL_HEIGHT][CELL_WIDTH];
+        SDL_Rect queueRect[3];
         SDL_Rect mainLogoRect;
         SDL_Rect buttonPlayRect;
         SDL_Rect buttonLevelRect;

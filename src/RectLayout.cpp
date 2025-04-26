@@ -49,6 +49,16 @@ SDL_Rect& RectLayout :: getMatrixRect() {
     return matrix;
 }
 
+SDL_Rect& RectLayout :: getNextRect(SDL_Texture* texture, int i) {
+    int _w = 0, _h = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &_w, &_h);
+    int xx = QUEUE_POS_X + (BLOCK_WIDTH - _w) / 2;
+    int yy = QUEUE_POS_Y + (i * BLOCK_HEIGHT) + (BLOCK_HEIGHT - _h) / 2;
+
+    queueRect[i] = {xx, yy, _w, _h};
+    return queueRect[i];
+}
+
 SDL_Rect& RectLayout :: getTextPlayRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);

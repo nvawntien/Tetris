@@ -8,6 +8,7 @@
 point temp[4], backup[4], ghost[4];
 int grid[CELL_HEIGHT][CELL_WIDTH] = {{0}};
 int girdNextBlock[5][8] = {{0}};
+std :: deque <int> previewQueue;
 
 const int Tetromino :: figure[7][4] = {
     {0, 1, 2, 3}, // I

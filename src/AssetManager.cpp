@@ -44,6 +44,14 @@ void AssetManager :: loadAssets() {
     Locked_Block[S] = Utils :: getInstance().loadImage(LOCKED_PATH S_PNG);
     Locked_Block[T] = Utils :: getInstance().loadImage(LOCKED_PATH T_PNG);
 
+    Whole_Block[I] = Utils :: getInstance().loadImage(WHOLE_PATH I_PNG);
+    Whole_Block[Z] = Utils :: getInstance().loadImage(WHOLE_PATH Z_PNG);
+    Whole_Block[J] = Utils :: getInstance().loadImage(WHOLE_PATH J_PNG);
+    Whole_Block[L] = Utils :: getInstance().loadImage(WHOLE_PATH L_PNG);
+    Whole_Block[O] = Utils :: getInstance().loadImage(WHOLE_PATH O_PNG);
+    Whole_Block[S] = Utils :: getInstance().loadImage(WHOLE_PATH S_PNG);
+    Whole_Block[T] = Utils :: getInstance().loadImage(WHOLE_PATH T_PNG);
+
     SDL_Color color = {255, 255, 255, 255};
     Text[PLAY] = Utils :: getInstance().loadText("PLAY", color);
     Text[L1|TARGET] = Utils :: getInstance().loadText("LEVEL 1", color);
@@ -101,10 +109,14 @@ void AssetManager :: RenderAssetGame(int score, int level, int lines) {
     SDL_RenderCopy(renderer, Text[LINES], NULL, &RectLayout :: getInstance().getLinesRect(Text[LINES]));
 }
 
+void AssetManager :: RenderNextBlock(int color, int i) {
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Whole_Block[color], NULL, &RectLayout :: getInstance().getNextRect(Whole_Block[color], i));
+}
+
 void AssetManager :: RenderNormalBlock(int x, int y, int color) {
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Normal_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
 }
-
+ 
 void AssetManager :: RenderGhostBlock(int x, int y, int color) {
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Ghost_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
 }
@@ -130,11 +142,16 @@ void AssetManager ::  clean() {
         SDL_DestroyTexture(pair.second);
     }
 
+    for (auto &pair : Whole_Block) {
+        SDL_DestroyTexture(pair.second);
+    }
+
     for (auto &pair : Locked_Block) {
         SDL_DestroyTexture(pair.second);
     }
 
     Locked_Block.clear();
+    Whole_Block.clear();
     Normal_Block.clear();
     Ghost_Block.clear();
     Image.clear();

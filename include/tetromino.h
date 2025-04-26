@@ -8,7 +8,8 @@ struct point {
 
 extern point temp[4], backup[4], ghost[4];
 extern int grid[CELL_HEIGHT][CELL_WIDTH];
-
+extern std :: deque <int> previewQueue;
+ 
 class Tetromino {
     public:
         Tetromino();
@@ -23,7 +24,6 @@ class Tetromino {
     private:
         static const int figure[7][4];
         std :: vector <int> bag;
-        std :: deque <int> previewQueue;
         int bagIndex;
         void refillBag();
         void initQueue();
