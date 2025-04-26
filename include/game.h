@@ -31,10 +31,12 @@ class Game {
         Uint32 currentTime = 0, lastTime = 0, delay = 500;
         Tetromino currentBlock;
         bool rotate = false;
+        bool hardDrop = false;
         int move_x = 0;
         int level = 1;
         int score = 0;
         int linesCleared = 0;
+        
 };
 
 

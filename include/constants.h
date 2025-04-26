@@ -12,6 +12,8 @@
 #define MATRIX_HEIGHT 534
 #define MATRIX_POS_X  264
 #define MATRIX_POS_Y  33
+#define HOLD_POS_X    84
+#define HOLD_POS_Y    105
 #define QUEUE_POS_X   600
 #define QUEUE_POS_Y   105
 #define BLOCK_WIDTH   115

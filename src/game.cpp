@@ -96,6 +96,9 @@ void Game :: Event() {
             case SDLK_UP:
                 rotate = true;
                 break;
+            case SDLK_SPACE:
+                hardDrop = true;
+                break;
             }
        }
     }
@@ -115,7 +118,19 @@ void Game :: processGameLogic() {
 
     if (rotate) currentBlock.rotate();
 
-    if (currentTime - lastTime > delay) {
+    if (hardDrop) {
+        while (!currentBlock.checkCollision(temp)) {
+            for (int i = 0; i < 4; i++) temp[i].y++;
+        }
+
+        for (int i = 0; i < 4; i++) temp[i].y--;
+        for (int i = 0; i < 4; i++) {
+            grid[temp[i].y][temp[i].x] = currentBlock.color;
+        }
+        currentBlock.nextTetromino();
+        hardDrop = false;
+    }
+    else if (currentTime - lastTime > delay) {
         lastTime = currentTime;
         for (int i = 0; i < 4; i++) {
             temp[i].y += 1;
