@@ -2,6 +2,7 @@
 
 Game :: Game() {
     Utils :: getInstance().initSDL();
+    Utils :: getInstance().loadHighScores(HIGHSCORE_PATH, highScores);
     AssetManager :: getInstance().loadAssets();
     RectLayout :: getInstance().CreateRect();
     gameState = MENU;
@@ -11,7 +12,7 @@ bool Game :: isRunning() {
     return running;
 }
 
-bool Game::Menu() {
+void Game :: ResetGame() {
     for (int i = 0; i < CELL_HEIGHT; i++) {
         for (int j = 0; j < CELL_WIDTH; j++) {
             grid[i][j] = 0;
@@ -21,13 +22,17 @@ bool Game::Menu() {
     currentBlock.nextTetromino();
     hasHold = false;
     holdUsed = false;
-    isGameRunning = true;
-    isPauseRunning = true;
     move_x = 0;
-    level = 1;
     score = 0;
     linesCleared = 0;
-   
+}
+
+bool Game::Menu() {
+    isGameRunning = true;
+    isPauseRunning = true;
+    isGameOverRunning = true;
+    level = 1;
+    ResetGame();
 
     SDL_Event event;
     const SDL_Rect& playRect = RectLayout::getInstance().getButtonPlayRect();
@@ -79,7 +84,7 @@ bool Game::Menu() {
                     break;
             }
         }
-        AssetManager::getInstance().RenderAssetMenu(playState, levelState, level);
+        AssetManager::getInstance().RenderAssetMenu(playState, levelState, level, highScores);
     }
 
     return isMenuRunning;
@@ -267,6 +272,9 @@ void Game :: checkGameOver() {
 
     if (game_over_count == CELL_HEIGHT) {
         isGameRunning = false;
+        gameState = GAME_OVER;
+        Utils :: getInstance().updateHighScores(score, highScores);
+        Utils :: getInstance().saveHighScores(HIGHSCORE_PATH, highScores);
     }
 }
 
@@ -294,10 +302,13 @@ void Game :: updateRenderer() {
     // render ghost block
 
     for (int i = 0; i < 4; i++) ghost[i] = temp[i];
+   
     while (!currentBlock.checkCollision(ghost)) {
         for (int i = 0; i < 4; i++) ghost[i].y++;
     }
+    
     for (int i = 0; i < 4; i++) ghost[i].y--;
+    
     for (int i = 0; i < 4; i++) {
         AssetManager :: getInstance().RenderGhostBlock(ghost[i].x, ghost[i].y, currentBlock.color);
     }
@@ -312,6 +323,7 @@ void Game :: updateRenderer() {
 bool Game :: GamePlay() {
     isMenuRunning = true;
     isPauseRunning = true;
+    isGameOverRunning = true;
 
     while (isGameRunning) {
         setCurrentTime(SDL_GetTicks());
@@ -328,6 +340,7 @@ bool Game :: GamePlay() {
 bool Game :: GamePause() {
     isMenuRunning = true;
     isGameRunning = true;
+    isGameOverRunning = true;
 
     SDL_Event event;
 
@@ -391,6 +404,69 @@ bool Game :: GamePause() {
 }
 
 bool Game :: GameOver() {
-    return true;
+    isMenuRunning = true;
+    isGameRunning = true;
+    isPauseRunning = true;
+
+    SDL_Event event;
+
+    ButtonState homeState = NORMAL;
+    ButtonState replayState = NORMAL;
+
+    const SDL_Rect& homeRect = RectLayout :: getInstance().getButtonHomeRect();
+    const SDL_Rect& replayRect = RectLayout :: getInstance().getButtonReplayRect();
+
+    while (isGameOverRunning) {
+        int mx, my;
+        SDL_GetMouseState(&mx, &my);
+        SDL_Point mousePoint = { mx, my };
+
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    running = false;
+                    isGameOverRunning = false;
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    homeState = SDL_PointInRect(&mousePoint, &homeRect) ? HOVER : NORMAL;
+                    replayState = SDL_PointInRect(&mousePoint, &replayRect) ? HOVER : NORMAL;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        if (SDL_PointInRect(&mousePoint, &homeRect)) homeState = DOWN;
+                        if (SDL_PointInRect(&mousePoint, &replayRect)) replayState = DOWN;
+                    }
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        if (homeState == DOWN && SDL_PointInRect(&mousePoint, &homeRect)) {
+                            gameState = MENU;
+                            isGameOverRunning = false;
+                        }
+
+                        if (replayState == DOWN && SDL_PointInRect(&mousePoint, &replayRect)) {
+                            gameState = PLAYING;
+                            ResetGame();
+                            isGameOverRunning = false;
+                        }
+
+                        // Reset lại trạng thái nút sau khi nhả chuột
+                        homeState = NORMAL;
+                        replayState = NORMAL;
+                    }
+                    break;
+            }
+        }
+        SDL_RenderClear(Utils :: getInstance().getRenderer());
+        AssetManager::getInstance().RenderAssetGame(score, level, linesCleared, pauseState);
+        AssetManager::getInstance().RenderAssetGameOver(homeState, replayState, highScores);
+        SDL_RenderPresent(Utils :: getInstance().getRenderer());
+    }
+
+
+    return isGameOverRunning;    
 }
 

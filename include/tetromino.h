@@ -16,8 +16,6 @@ class Tetromino {
         int color;
         bool locked = false;
         bool flashing = false;
-        Uint32 flashStartTime = 0;
-        Uint32 flashDuration = 1000; // Thời gian nhấp nháy (milliseconds)
         void nextTetromino();
         void rotate();
         void reset();

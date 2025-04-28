@@ -31,6 +31,40 @@ void Utils :: quitSDL() {
     SDL_Quit();
 }
 
+void Utils :: loadHighScores(const std :: string& filename, std::vector <int>& highScores) {
+    std::ifstream file(filename);
+    highScores.clear();
+    if (file.is_open()) {
+        int score;
+        while (file >> score) {
+            highScores.push_back(score);
+        }
+        file.close();
+    }
+}
+
+// Lưu điểm cao nhất lại
+
+void Utils :: saveHighScores(const std :: string& filename, std::vector <int>& highScores) {
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        for (int score : highScores) {
+            file << score << "\n";
+        }
+        file.close();
+    }
+}
+
+// cập nhật điểm cao nhất
+
+void Utils ::  updateHighScores(int newScore, std::vector<int>& highScores) {
+    highScores.push_back(newScore);
+    std::sort(highScores.rbegin(), highScores.rend()); // Sắp xếp giảm dần
+    if (highScores.size() > 5) {
+        highScores.resize(5); // Giữ đúng 5 phần tử
+    }
+}
+
 SDL_Texture* Utils::loadImage(const std :: string &path) {
     SDL_Texture *newTexture = nullptr;
     SDL_Surface *loadedSurface = IMG_Load(path.c_str());

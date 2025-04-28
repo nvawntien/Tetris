@@ -5,11 +5,17 @@ AssetManager& AssetManager :: getInstance() {
     return instance;
 }
 
+// load tất cả  hình ảnh, âm thanh, font cần dùng cho toàn bộ chương trình
+
 void AssetManager :: loadAssets() {
     Image[BACKGROUND] = Utils :: getInstance().loadImage(BACKGROUND_PATH);
     Image[MATRIX] = Utils :: getInstance().loadImage(MATRIX_PATH);
     Image[LOGO] = Utils :: getInstance().loadImage(LOGO_PATH);
     Image[MENU_FRAME] = Utils :: getInstance().loadImage(MENU_FRAME_PATH);
+    Image[MENU_GAMEOVER] = Utils :: getInstance().loadImage(MENU_GAMEOVER_PATH);
+    Image[ICON_HOME] = Utils :: getInstance().loadImage(ICON_HOME_PATH);
+    Image[ICON_REPLAY] = Utils :: getInstance().loadImage(ICON_REPLAY_PATH);
+    Image[HIGH_SCORE] = Utils :: getInstance().loadImage(HIGH_SCORE_PATH);
     Image[GREEN|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_GREEN);
     Image[GREEN|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_GREEN);
     Image[GREEN|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_GREEN);
@@ -19,7 +25,12 @@ void AssetManager :: loadAssets() {
     Image[PAUSE|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_PAUSE);
     Image[PAUSE|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_PAUSE);
     Image[PAUSE|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_PAUSE);
-
+    Image[HOME|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_HOME);
+    Image[HOME|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_HOME);
+    Image[HOME|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_HOME);
+    Image[REPLAY|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_REPLAY);
+    Image[REPLAY|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_REPLAY);
+    Image[REPLAY|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_REPLAY);
 
     Normal_Block[I] = Utils :: getInstance().loadImage(NORMAL_PATH I_PNG);
     Normal_Block[Z] = Utils :: getInstance().loadImage(NORMAL_PATH Z_PNG);
@@ -68,7 +79,7 @@ void AssetManager :: loadAssets() {
     Text[LINES] = Utils :: getInstance().loadStats("0", color);
 }
 
-void AssetManager::RenderAssetMenu(ButtonState playState, ButtonState levelState, int level) {
+void AssetManager::RenderAssetMenu(ButtonState playState, ButtonState levelState, int level, std::vector <int>& highScores) {
     SDL_Renderer* renderer = Utils::getInstance().getRenderer();
     SDL_RenderClear(renderer);
 
@@ -78,8 +89,16 @@ void AssetManager::RenderAssetMenu(ButtonState playState, ButtonState levelState
 
     SDL_RenderCopy(renderer, Image[GREEN|playState], NULL, &RectLayout::getInstance().getButtonPlayRect());
     SDL_RenderCopy(renderer, Image[BLACK|levelState], NULL, &RectLayout::getInstance().getButtonLevelRect());
+    SDL_RenderCopy(renderer, Image[HIGH_SCORE], NULL, &RectLayout :: getInstance().getHighScoreRect());
     SDL_RenderCopy(renderer, Text[PLAY], NULL, &RectLayout :: getInstance().getPlayTextRect(Text[PLAY]));
     SDL_RenderCopy(renderer, Text[level|TARGET], NULL, &RectLayout :: getInstance().getLevelTextRect(Text[level|TARGET]));
+    
+    for (int i = 0; i < 5; i++) {
+        std::string scoreText = std::to_string(highScores[i]);
+        High_Score[i] = Utils :: getInstance().loadStats(scoreText, {255, 255, 255, 255});
+        SDL_RenderCopy(renderer, High_Score[i], NULL, &RectLayout :: getInstance().getMenuHighScoreTextRect(High_Score[i], i));
+    }
+
     SDL_RenderPresent(renderer);
 }
 
@@ -123,6 +142,26 @@ void AssetManager :: RenderAssetPause(ButtonState resumeState, ButtonState quitS
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[BLACK|quitState], NULL, &RectLayout :: getInstance().getButtonQuitRect());
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Text[RESUME], NULL, &RectLayout :: getInstance().getResumeTextRect(Text[RESUME]));
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Text[QUIT], NULL, &RectLayout :: getInstance().getQuitTextRect(Text[QUIT]));
+}
+
+void AssetManager :: RenderAssetGameOver(ButtonState homeState, ButtonState replayState,std::vector <int>& highScores) {
+     //Vẽ lớp màu đen mờ lên
+    SDL_SetRenderDrawBlendMode(Utils :: getInstance().getRenderer(), SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(Utils :: getInstance().getRenderer(), 0, 0, 0, 128); // (R,G,B,A) - 128 là độ mờ
+    SDL_Rect fullScreen = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_RenderFillRect(Utils :: getInstance().getRenderer(), &fullScreen);
+    
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[MENU_GAMEOVER], NULL, &RectLayout :: getInstance().getMenuGameOverRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[HOME|homeState], NULL, &RectLayout :: getInstance().getButtonHomeRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[REPLAY|replayState], NULL, &RectLayout :: getInstance().getButtonReplayRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[ICON_HOME], NULL, &RectLayout :: getInstance().getIconHomeRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[ICON_REPLAY], NULL, &RectLayout :: getInstance().getIconReplayRect());
+    
+    for (int i = 0; i < 5; i++) {
+        std::string scoreText = std::to_string(highScores[i]);
+        High_Score[i] = Utils :: getInstance().loadStats(scoreText, {255, 255, 255, 255});
+        SDL_RenderCopy(Utils :: getInstance().getRenderer(), High_Score[i], NULL, &RectLayout :: getInstance().getGameOverHighScoreTextRect(High_Score[i], i));
+    }
 }
 
 void AssetManager :: RenderHoldBlock(int color) {
@@ -170,6 +209,11 @@ void AssetManager ::  clean() {
         SDL_DestroyTexture(pair.second);
     }
 
+    for (auto &pair : High_Score) {
+        SDL_DestroyTexture(pair.second);
+    }
+
+    High_Score.clear();
     Locked_Block.clear();
     Whole_Block.clear();
     Normal_Block.clear();

@@ -4,22 +4,28 @@
 #include "RectLayout.h"
 
 enum TextureType {
-    BACKGROUND = 1 << 0,
-    LOGO = 1 << 1,
-    MATRIX = 1 << 2,
-    GREEN  = 1 << 3,
-    BLACK  = 1 << 4,
-    PAUSE = 1 << 5,
-    SCORE = 1 << 6,
-    LINES = 1 << 7,
-    TARGET = 1 << 8,
-    MENU_FRAME = 1 << 9,
+    BACKGROUND = 1,
+    LOGO = 2,
+    MATRIX = 3,
+    MENU_FRAME = 5,
+    MENU_GAMEOVER = 7,
+    ICON_HOME = 9,
+    ICON_REPLAY = 11,
+    HIGH_SCORE = 13,
+    GREEN  = 1 << 2,
+    BLACK  = 1 << 3,
+    PAUSE = 1 << 4,
+    HOME = 1 << 5,
+    REPLAY = 1 << 6,
+    TARGET = 1 << 7,
     L1 = 1,
     L2 = 2,
     L3 = 3,
     RESUME = 4,
     QUIT = 5,
-    PLAY = 6
+    PLAY = 6,
+    SCORE = 7,
+    LINES = 8
 };
 
 enum BlockType {
@@ -37,9 +43,10 @@ class AssetManager {
     public:
         static AssetManager& getInstance();
         void loadAssets();
-        void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level);
+        void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level,std::vector <int>& highScores);
         void RenderAssetGame(int score, int level, int lines, ButtonState pauseState);
         void RenderAssetPause(ButtonState resumeState, ButtonState quitState);
+        void RenderAssetGameOver(ButtonState homeState, ButtonState replayState, std::vector <int>& highScore);
         void RenderNextBlock(int color, int i);
         void RenderHoldBlock(int color);
         void RenderNormalBlock(int x, int y, int color);
@@ -55,8 +62,10 @@ class AssetManager {
         std :: unordered_map <int, SDL_Texture*> Image;
         std :: unordered_map <int, SDL_Texture*> Text;
         std :: unordered_map <int, SDL_Texture*> Normal_Block, Ghost_Block, Locked_Block, Whole_Block;
+        std :: unordered_map <int, SDL_Texture*> High_Score;
         int prevScore = -1; 
         int prelineCleared = -1;
+        int preHighScore = -1;
 };
 
 #endif

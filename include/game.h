@@ -21,6 +21,7 @@ class Game {
         bool GamePause();
         bool GameOver();
     private:
+        void ResetGame();
         void PerformHoldBlock();
         void setCurrentTime(Uint32 T);
         void Event();
@@ -28,7 +29,7 @@ class Game {
         void clearFullLines();
         void checkGameOver();
         void updateRenderer();
-        bool running = true, isGameRunning = true, isMenuRunning = true, isPauseRunning = true;
+        bool running = true, isGameRunning = true, isMenuRunning = true, isPauseRunning = true, isGameOverRunning = true;
         Uint32 currentTime = 0, lastTime = 0, delay = 500;
         Tetromino currentBlock;
         int holdBlock;
@@ -40,6 +41,7 @@ class Game {
         int move_x = 0;
         int level = 1;
         int score = 0;
+        std :: vector <int>  highScores;
         int linesCleared = 0;
         
 };

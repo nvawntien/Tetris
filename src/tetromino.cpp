@@ -25,6 +25,7 @@ Tetromino :: Tetromino() {
     initQueue();
 }
 
+// trộn ngẫu nhiễn các khối
 void Tetromino :: refillBag() {
     bag = {0, 1, 2, 3, 4, 5, 6}; 
     unsigned seed = std::time(0);
