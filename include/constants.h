@@ -32,6 +32,16 @@
 #define LOGO_WIDTH    240
 #define LOGO_HEIGHT   160
 
+#define MENU_FRAME_POS_X  264
+#define MENU_FRAME_POS_Y  125
+#define MENU_FRAME_WIDTH  272
+#define MENU_FRAME_HEIGHT 350
+
+#define BUTTON_RESUME_POS_X 300
+#define BUTTON_RESUME_POS_Y 250
+#define BUTTON_RESUME_WIDTH 200
+#define BUTTON_RESUME_HEIGHT 60
+
 #define BUTTON_PLAY_POS_X  300
 #define BUTTON_PLAY_POS_Y  227
 #define BUTTON_PLAY_WIDTH  200
@@ -47,7 +57,7 @@
 #define BACKGROUND_PATH   IMAGES_PATH "background.png"
 #define LOGO_PATH         IMAGES_PATH "main-logo.png"
 #define MATRIX_PATH       IMAGES_PATH "matrix.png"
-
+#define MENU_FRAME_PATH   IMAGES_PATH "menu-frame.png"
 #define NORMAL_PATH       IMAGES_PATH "normal/"
 #define HOVER_PATH        IMAGES_PATH "hover/"
 #define DOWN_PATH         IMAGES_PATH "down/"
@@ -55,8 +65,8 @@
 #define LOCKED_PATH       IMAGES_PATH "locked/"
 #define WHOLE_PATH        IMAGES_PATH "whole/"
 
-#define BUTTON_PLAY       "button-play.png"
-#define BUTTON_LEVEL      "button-level.png"
+#define BUTTON_GREEN      "button-green.png"
+#define BUTTON_BLACK      "button-black.png"
 #define BUTTON_PAUSE      "button-pause.png"
 
 #define I_PNG             "I.png"

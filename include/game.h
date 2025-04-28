@@ -28,9 +28,11 @@ class Game {
         void clearFullLines();
         void checkGameOver();
         void updateRenderer();
-        bool running = true, isGameRunning = true, isMenuRunning = true;
+        bool running = true, isGameRunning = true, isMenuRunning = true, isPauseRunning = true;
         Uint32 currentTime = 0, lastTime = 0, delay = 500;
-        Tetromino currentBlock, holdBlock;
+        Tetromino currentBlock;
+        int holdBlock;
+        ButtonState pauseState = NORMAL;
         bool holdUsed = false;
         bool hasHold = false;
         bool rotate = false;

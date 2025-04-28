@@ -7,15 +7,19 @@ enum TextureType {
     BACKGROUND = 1 << 0,
     LOGO = 1 << 1,
     MATRIX = 1 << 2,
-    PLAY  = 1 << 3,
-    LEVEL  = 1 << 4,
+    GREEN  = 1 << 3,
+    BLACK  = 1 << 4,
     PAUSE = 1 << 5,
     SCORE = 1 << 6,
     LINES = 1 << 7,
     TARGET = 1 << 8,
+    MENU_FRAME = 1 << 9,
     L1 = 1,
     L2 = 2,
     L3 = 3,
+    RESUME = 4,
+    QUIT = 5,
+    PLAY = 6
 };
 
 enum BlockType {
@@ -34,7 +38,8 @@ class AssetManager {
         static AssetManager& getInstance();
         void loadAssets();
         void RenderAssetMenu(ButtonState playState, ButtonState leverState, int level);
-        void RenderAssetGame(int score, int level, int lines);
+        void RenderAssetGame(int score, int level, int lines, ButtonState pauseState);
+        void RenderAssetPause(ButtonState resumeState, ButtonState quitState);
         void RenderNextBlock(int color, int i);
         void RenderHoldBlock(int color);
         void RenderNormalBlock(int x, int y, int color);

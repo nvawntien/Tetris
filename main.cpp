@@ -4,7 +4,6 @@
 
 int main(int argc, char* argv[]) {
     Game *player = new Game;
-
     while (player -> isRunning()) {
         switch (player -> gameState) {
             case MENU:

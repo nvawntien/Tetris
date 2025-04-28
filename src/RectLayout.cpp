@@ -19,11 +19,15 @@ void RectLayout :: CreateRect() {
 
     
     mainLogoRect = {LOGO_POS_X, LOGO_POS_Y, LOGO_WIDTH, LOGO_HEIGHT};
+    matrix = {MATRIX_POS_X, MATRIX_POS_Y, MATRIX_WIDTH, MATRIX_HEIGHT};
+    menuFrameRect = {MENU_FRAME_POS_X, MENU_FRAME_POS_Y, MENU_FRAME_WIDTH, MENU_FRAME_HEIGHT};
+    
     buttonPlayRect = {BUTTON_PLAY_POS_X, BUTTON_PLAY_POS_Y, BUTTON_PLAY_WIDTH, BUTTON_PLAY_HEIGHT};
     buttonLevelRect = {buttonPlayRect.x, buttonPlayRect.y + 60 + BLOCK_SIZE / 2, BUTTON_PLAY_WIDTH, BUTTON_PLAY_HEIGHT};
-    matrix = {MATRIX_POS_X, MATRIX_POS_Y, MATRIX_WIDTH, MATRIX_HEIGHT};
+    buttonResumeRect = {BUTTON_RESUME_POS_X, BUTTON_RESUME_POS_Y, BUTTON_RESUME_WIDTH, BUTTON_RESUME_HEIGHT};
+    buttonQuitRect = {buttonResumeRect.x, buttonResumeRect.y + BUTTON_RESUME_HEIGHT + BLOCK_SIZE, buttonResumeRect.w, buttonResumeRect.h};
     buttonPauseRect = {BUTTON_PAUSE_POS_X, BUTTON_PAUSE_POS_Y, BUTTON_PAUSE_WIDTH, BUTTON_PAUSE_HEIGHT};
-    
+
     scoreRect = {SCORE_POS_X, SCORE_POS_Y, SCORE_WIDTH, SCORE_HEIGHT};
     levelRect = {scoreRect.x, scoreRect.y + 60 ,scoreRect.w, scoreRect.h};
     linesRect = {levelRect.x, levelRect.y + 60, scoreRect.w, scoreRect.h};
@@ -37,6 +41,10 @@ SDL_Rect& RectLayout :: getLogoRect() {
     return mainLogoRect;
 }
 
+SDL_Rect& RectLayout :: getMatrixRect() {
+    return matrix;
+}
+
 SDL_Rect& RectLayout :: getButtonPlayRect() {
     return buttonPlayRect;
 }
@@ -45,8 +53,16 @@ SDL_Rect& RectLayout :: getButtonLevelRect() {
     return buttonLevelRect;
 }
 
-SDL_Rect& RectLayout :: getMatrixRect() {
-    return matrix;
+SDL_Rect& RectLayout :: getButtonResumeRect() {
+    return buttonResumeRect;
+}
+
+SDL_Rect& RectLayout :: getButtonQuitRect() {
+    return buttonQuitRect;
+}
+
+SDL_Rect& RectLayout :: getMenuFrameRect() {
+    return menuFrameRect;
 }
 
 SDL_Rect& RectLayout :: getHoldRect(SDL_Texture* texture) {
@@ -69,29 +85,47 @@ SDL_Rect& RectLayout :: getNextRect(SDL_Texture* texture, int i) {
     return queueRect[i];
 }
 
-SDL_Rect& RectLayout :: getTextPlayRect(SDL_Texture* texture) {
+SDL_Rect& RectLayout :: getPlayTextRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
     int xx = buttonPlayRect.x + (buttonPlayRect.w - texW) / 2;
     int yy = buttonPlayRect.y + (buttonPlayRect.h - texH) / 2;
-    textPlayRect = {xx, yy, texW, texH};
-    return textPlayRect;
+    playTextRect= {xx, yy, texW, texH};
+    return playTextRect;
 }
 
-SDL_Rect& RectLayout :: getTextLevelRect(SDL_Texture* texture) {
+SDL_Rect& RectLayout :: getLevelTextRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
     int xx = buttonLevelRect.x + (buttonLevelRect.w - texW) / 2;
     int yy = buttonLevelRect.y + (buttonLevelRect.h - texH) / 2;
-    textLevelRect = {xx, yy, texW, texH};
-    return textLevelRect;
+    levelTextRect = {xx, yy, texW, texH};
+    return levelTextRect;
+}
+
+SDL_Rect& RectLayout :: getResumeTextRect(SDL_Texture* texture) {
+    int texW = 0, texH = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    int xx = buttonResumeRect.x + (buttonResumeRect.w - texW) / 2;
+    int yy = buttonResumeRect.y + (buttonResumeRect.h - texH) / 2;
+    resumeTextRect = {xx, yy, texW, texH};
+    return resumeTextRect;
+}
+
+SDL_Rect& RectLayout :: getQuitTextRect(SDL_Texture* texture) {
+    int texW = 0, texH = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    int xx = buttonQuitRect.x + (buttonQuitRect.w - texW) / 2;
+    int yy = buttonQuitRect.y + (buttonQuitRect.h - texH) / 2;
+    quitTextRect = {xx, yy, texW, texH};
+    return quitTextRect;
 }
 
 SDL_Rect& RectLayout :: getButtonPauseRect() {
     return buttonPauseRect;
 }
 
-SDL_Rect& RectLayout :: getScoreRect(SDL_Texture* texture) {
+SDL_Rect& RectLayout :: getScoreTextRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
     int xx = scoreRect.x + (scoreRect.w - texW) / 2;
@@ -100,16 +134,16 @@ SDL_Rect& RectLayout :: getScoreRect(SDL_Texture* texture) {
     return scoreTextRect;
 }
 
-SDL_Rect& RectLayout :: getLevelRect(SDL_Texture* texture) {
+SDL_Rect& RectLayout :: getLevelMiniTextRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
     int xx = levelRect.x + (levelRect.w - texW) / 2;
     int yy = levelRect.y + (levelRect.h - texH) / 2;
-    levelTextRect = {xx, yy, texW, texH};
-    return levelTextRect;
+    levelMiniTextRect = {xx, yy, texW, texH};
+    return levelMiniTextRect;
 }
 
-SDL_Rect& RectLayout :: getLinesRect(SDL_Texture* texture) {
+SDL_Rect& RectLayout :: getLinesTextRect(SDL_Texture* texture) {
     int texW = 0, texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
     int xx = linesRect.x + (linesRect.w - texW) / 2;
@@ -117,3 +151,4 @@ SDL_Rect& RectLayout :: getLinesRect(SDL_Texture* texture) {
     linesTextRect = {xx, yy, texW, texH};
     return linesTextRect;
 }
+

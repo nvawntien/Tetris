@@ -12,8 +12,24 @@ bool Game :: isRunning() {
 }
 
 bool Game::Menu() {
-    SDL_Event event;
+    for (int i = 0; i < CELL_HEIGHT; i++) {
+        for (int j = 0; j < CELL_WIDTH; j++) {
+            grid[i][j] = 0;
+        }
+    }
 
+    currentBlock.nextTetromino();
+    hasHold = false;
+    holdUsed = false;
+    isGameRunning = true;
+    isPauseRunning = true;
+    move_x = 0;
+    level = 1;
+    score = 0;
+    linesCleared = 0;
+   
+
+    SDL_Event event;
     const SDL_Rect& playRect = RectLayout::getInstance().getButtonPlayRect();
     const SDL_Rect& levelRect = RectLayout::getInstance().getButtonLevelRect();
 
@@ -76,22 +92,47 @@ void Game :: setCurrentTime(Uint32 T) {
 
 void Game :: PerformHoldBlock() {
     if (!hasHold) {
-        holdBlock = currentBlock;
+        holdBlock = currentBlock.color;
         currentBlock.nextTetromino();
         holdUsed = false;
         hasHold = true;
     } 
     else {
-        std :: swap(currentBlock, holdBlock);
+        std :: swap(currentBlock.color, holdBlock);
         currentBlock.reset();
     }
 }
+
 void Game :: Event() {
     SDL_Event event;
+   
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+    SDL_Point mousePoint = { mx, my };
+   
+    const SDL_Rect& pauseRect = RectLayout :: getInstance().getButtonPauseRect();
+
     while (SDL_PollEvent(&event)) {
        if (event.type == SDL_QUIT) {
             running = false;
             isGameRunning = false;
+       }
+       else if (event.type == SDL_MOUSEMOTION) {
+            pauseState = SDL_PointInRect(&mousePoint, &pauseRect) ? HOVER : NORMAL;
+       }
+       else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                if (SDL_PointInRect(&mousePoint, &pauseRect)) pauseState = DOWN;
+            }
+       }
+       else if (event.type == SDL_MOUSEBUTTONUP) {
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                if (pauseState == DOWN && SDL_PointInRect(&mousePoint, &pauseRect)) {
+                    gameState = PAUSING;
+                    isGameRunning = false;
+                }
+            }
+            pauseState = NORMAL;
        }
        else if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) 
@@ -116,6 +157,7 @@ void Game :: Event() {
                     PerformHoldBlock();
                     holdUsed = true;
                 }
+                break;
             }
        }
     }
@@ -230,10 +272,11 @@ void Game :: checkGameOver() {
 
 void Game :: updateRenderer() {
     SDL_RenderClear(Utils :: getInstance().getRenderer());  
-    AssetManager :: getInstance().RenderAssetGame(score, level, linesCleared);
+    AssetManager :: getInstance().RenderAssetGame(score, level, linesCleared, pauseState);
 
+    // render hold block
     if (hasHold) {
-        AssetManager :: getInstance().RenderHoldBlock(holdBlock.color);
+        AssetManager :: getInstance().RenderHoldBlock(holdBlock);
     }
     // render next block
     for (int i = 0; i < 3; i++) {
@@ -267,6 +310,9 @@ void Game :: updateRenderer() {
 }
 
 bool Game :: GamePlay() {
+    isMenuRunning = true;
+    isPauseRunning = true;
+
     while (isGameRunning) {
         setCurrentTime(SDL_GetTicks());
         Event();
@@ -280,7 +326,68 @@ bool Game :: GamePlay() {
 }
 
 bool Game :: GamePause() {
-    return true;
+    isMenuRunning = true;
+    isGameRunning = true;
+
+    SDL_Event event;
+
+    ButtonState resumeState = NORMAL;
+    ButtonState quitState = NORMAL;
+
+    const SDL_Rect& resumeRect = RectLayout :: getInstance().getButtonResumeRect();
+    const SDL_Rect& quitRect = RectLayout :: getInstance().getButtonQuitRect();
+
+    while (isPauseRunning) {
+        int mx, my;
+        SDL_GetMouseState(&mx, &my);
+        SDL_Point mousePoint = { mx, my };
+
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    running = false;
+                    isPauseRunning = false;
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    resumeState = SDL_PointInRect(&mousePoint, &resumeRect) ? HOVER : NORMAL;
+                    quitState = SDL_PointInRect(&mousePoint, &quitRect) ? HOVER : NORMAL;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        if (SDL_PointInRect(&mousePoint, &resumeRect)) resumeState = DOWN;
+                        if (SDL_PointInRect(&mousePoint, &quitRect)) quitState = DOWN;
+                    }
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        if (resumeState == DOWN && SDL_PointInRect(&mousePoint, &resumeRect)) {
+                            gameState = PLAYING;
+                            isPauseRunning = false;
+                        }
+
+                        if (quitState == DOWN && SDL_PointInRect(&mousePoint, &quitRect)) {
+                            gameState = MENU;
+                            isPauseRunning = false;
+                        }
+
+                        // Reset lại trạng thái nút sau khi nhả chuột
+                        resumeState = NORMAL;
+                        quitState = NORMAL;
+                    }
+                    break;
+            }
+        }
+        SDL_RenderClear(Utils :: getInstance().getRenderer());
+        AssetManager::getInstance().RenderAssetGame(score, level, linesCleared, pauseState);
+        AssetManager::getInstance().RenderAssetPause(resumeState, quitState);
+        SDL_RenderPresent(Utils :: getInstance().getRenderer());
+    }
+
+
+    return isPauseRunning;    
 }
 
 bool Game :: GameOver() {

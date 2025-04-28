@@ -9,12 +9,13 @@ void AssetManager :: loadAssets() {
     Image[BACKGROUND] = Utils :: getInstance().loadImage(BACKGROUND_PATH);
     Image[MATRIX] = Utils :: getInstance().loadImage(MATRIX_PATH);
     Image[LOGO] = Utils :: getInstance().loadImage(LOGO_PATH);
-    Image[PLAY|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_PLAY);
-    Image[PLAY|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_PLAY);
-    Image[PLAY|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_PLAY);
-    Image[LEVEL|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_LEVEL);
-    Image[LEVEL|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_LEVEL);
-    Image[LEVEL|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_LEVEL);
+    Image[MENU_FRAME] = Utils :: getInstance().loadImage(MENU_FRAME_PATH);
+    Image[GREEN|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_GREEN);
+    Image[GREEN|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_GREEN);
+    Image[GREEN|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_GREEN);
+    Image[BLACK|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_BLACK);
+    Image[BLACK|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_BLACK);
+    Image[BLACK|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_BLACK);
     Image[PAUSE|NORMAL] = Utils :: getInstance().loadImage(NORMAL_PATH BUTTON_PAUSE);
     Image[PAUSE|HOVER] = Utils :: getInstance().loadImage(HOVER_PATH BUTTON_PAUSE);
     Image[PAUSE|DOWN] = Utils :: getInstance().loadImage(DOWN_PATH BUTTON_PAUSE);
@@ -57,7 +58,9 @@ void AssetManager :: loadAssets() {
     Text[L1|TARGET] = Utils :: getInstance().loadText("LEVEL 1", color);
     Text[L2|TARGET] = Utils :: getInstance().loadText("LEVEL 2", color);
     Text[L3|TARGET] = Utils :: getInstance().loadText("LEVEL 3", color);
-    
+    Text[RESUME] = Utils :: getInstance().loadText("RESUME", color);
+    Text[QUIT] = Utils :: getInstance().loadText("QUIT", color);
+
     Text[SCORE] = Utils :: getInstance().loadStats("0", color);
     Text[L1] = Utils :: getInstance().loadStats("1", color);
     Text[L2] = Utils :: getInstance().loadStats("2", color);
@@ -73,22 +76,21 @@ void AssetManager::RenderAssetMenu(ButtonState playState, ButtonState levelState
     SDL_RenderCopy(renderer, Image[BACKGROUND], NULL, NULL);
     SDL_RenderCopy(renderer, Image[LOGO], NULL, &RectLayout::getInstance().getLogoRect());
 
-    SDL_RenderCopy(renderer, Image[PLAY|playState], NULL, &RectLayout::getInstance().getButtonPlayRect());
-    SDL_RenderCopy(renderer, Image[LEVEL|levelState], NULL, &RectLayout::getInstance().getButtonLevelRect());
-    SDL_RenderCopy(renderer, Text[PLAY], NULL, &RectLayout :: getInstance().getTextPlayRect(Text[PLAY]));
-    SDL_RenderCopy(renderer, Text[level|TARGET], NULL, &RectLayout :: getInstance().getTextLevelRect(Text[level|TARGET]));
+    SDL_RenderCopy(renderer, Image[GREEN|playState], NULL, &RectLayout::getInstance().getButtonPlayRect());
+    SDL_RenderCopy(renderer, Image[BLACK|levelState], NULL, &RectLayout::getInstance().getButtonLevelRect());
+    SDL_RenderCopy(renderer, Text[PLAY], NULL, &RectLayout :: getInstance().getPlayTextRect(Text[PLAY]));
+    SDL_RenderCopy(renderer, Text[level|TARGET], NULL, &RectLayout :: getInstance().getLevelTextRect(Text[level|TARGET]));
     SDL_RenderPresent(renderer);
 }
 
 
-void AssetManager :: RenderAssetGame(int score, int level, int lines) {
+void AssetManager :: RenderAssetGame(int score, int level, int lines, ButtonState pauseState) {
     SDL_Renderer* renderer = Utils :: getInstance().getRenderer();
     SDL_RenderCopy(renderer, Image[BACKGROUND], NULL, NULL);
     SDL_RenderCopy(renderer, Image[MATRIX], NULL, &RectLayout :: getInstance().getMatrixRect());
-    SDL_RenderCopy(renderer, Image[PAUSE|NORMAL], NULL, &RectLayout :: getInstance().getButtonPauseRect());
-    
+    SDL_RenderCopy(renderer, Image[PAUSE|pauseState], NULL, &RectLayout :: getInstance().getButtonPauseRect());
 
-    SDL_RenderCopy(renderer, Text[level], NULL, &RectLayout :: getInstance().getLevelRect(Text[level]));
+    SDL_RenderCopy(renderer, Text[level], NULL, &RectLayout :: getInstance().getLevelMiniTextRect(Text[level]));
     
     // update score
     std::string scoreText = std::to_string(score);
@@ -97,7 +99,7 @@ void AssetManager :: RenderAssetGame(int score, int level, int lines) {
         prevScore = score;
         Text[SCORE] = Utils :: getInstance().loadStats(scoreText, {255, 255, 255, 255});   
     }
-    SDL_RenderCopy(renderer, Text[SCORE], NULL, &RectLayout :: getInstance().getScoreRect(Text[SCORE])); 
+    SDL_RenderCopy(renderer, Text[SCORE], NULL, &RectLayout :: getInstance().getScoreTextRect(Text[SCORE])); 
 
     std :: string lineClearedText = std::to_string(lines);
 
@@ -106,7 +108,21 @@ void AssetManager :: RenderAssetGame(int score, int level, int lines) {
         Text[LINES] = Utils :: getInstance().loadStats(lineClearedText, {255, 255, 255, 255});   
     }
 
-    SDL_RenderCopy(renderer, Text[LINES], NULL, &RectLayout :: getInstance().getLinesRect(Text[LINES]));
+    SDL_RenderCopy(renderer, Text[LINES], NULL, &RectLayout :: getInstance().getLinesTextRect(Text[LINES]));
+}
+
+void AssetManager :: RenderAssetPause(ButtonState resumeState, ButtonState quitState) {
+    //Vẽ lớp màu đen mờ lên
+    SDL_SetRenderDrawBlendMode(Utils :: getInstance().getRenderer(), SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(Utils :: getInstance().getRenderer(), 0, 0, 0, 128); // (R,G,B,A) - 128 là độ mờ
+    SDL_Rect fullScreen = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_RenderFillRect(Utils :: getInstance().getRenderer(), &fullScreen);
+
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[MENU_FRAME], NULL, &RectLayout :: getInstance().getMenuFrameRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[GREEN|resumeState], NULL, &RectLayout :: getInstance().getButtonResumeRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Image[BLACK|quitState], NULL, &RectLayout :: getInstance().getButtonQuitRect());
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Text[RESUME], NULL, &RectLayout :: getInstance().getResumeTextRect(Text[RESUME]));
+    SDL_RenderCopy(Utils :: getInstance().getRenderer(), Text[QUIT], NULL, &RectLayout :: getInstance().getQuitTextRect(Text[QUIT]));
 }
 
 void AssetManager :: RenderHoldBlock(int color) {

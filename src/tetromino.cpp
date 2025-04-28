@@ -7,7 +7,6 @@
 
 point temp[4], backup[4], ghost[4];
 int grid[CELL_HEIGHT][CELL_WIDTH] = {{0}};
-int girdNextBlock[5][8] = {{0}};
 std :: deque <int> previewQueue;
 
 const int Tetromino :: figure[7][4] = {
@@ -24,7 +23,6 @@ Tetromino :: Tetromino() {
     bagIndex = 0;
     refillBag();
     initQueue();
-    nextTetromino();
 }
 
 void Tetromino :: refillBag() {
@@ -44,8 +42,10 @@ void Tetromino::initQueue() {
 void Tetromino :: nextTetromino() {
     int id = previewQueue.front();
     previewQueue.pop_front();
-    color = id + 1;
 
+    color = id + 1;
+    std :: cerr << id << ' ' << color << '\n';
+    
     for (int i = 0; i < 4; i++) {
         temp[i].x = figure[id][i] % 4  + 3;
         temp[i].y = figure[id][i] / 4;
