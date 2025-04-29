@@ -9,7 +9,7 @@
 
 Phiên bản này được lập trình bằng **C++** sử dụng thư viện **SDL2**
 
-Video demo: [Tetris C++ with SDL2](https://youtu.be/BenUpUq1Zz4?si=LNaJmVzJ5bQlTkhy)
+Video demo: [Tetris C++ with SDL2](https://youtu.be/kcqnd57YXS4)
 # ⚙️ Hướng dẫn cài đặt
 
 ## 🔧 Yêu cầu
