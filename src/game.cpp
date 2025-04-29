@@ -463,6 +463,7 @@ bool Game :: GameOver() {
                         if (replayState == DOWN && SDL_PointInRect(&mousePoint, &replayRect)) {
                             gameState = PLAYING;
                             ResetGame();
+                            AssetManager :: getInstance().OpenBackgroundMusic();
                             isGameOverRunning = false;
                         }
 
