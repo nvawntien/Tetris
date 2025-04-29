@@ -39,6 +39,7 @@ void AssetManager :: loadAssets() {
     Normal_Block[O] = Utils :: getInstance().loadImage(NORMAL_PATH O_PNG);
     Normal_Block[S] = Utils :: getInstance().loadImage(NORMAL_PATH S_PNG);
     Normal_Block[T] = Utils :: getInstance().loadImage(NORMAL_PATH T_PNG);
+
     
     Ghost_Block[I] = Utils :: getInstance().loadImage(GHOST_PATH I_PNG);
     Ghost_Block[Z] = Utils :: getInstance().loadImage(GHOST_PATH Z_PNG);
@@ -63,6 +64,14 @@ void AssetManager :: loadAssets() {
     Whole_Block[O] = Utils :: getInstance().loadImage(WHOLE_PATH O_PNG);
     Whole_Block[S] = Utils :: getInstance().loadImage(WHOLE_PATH S_PNG);
     Whole_Block[T] = Utils :: getInstance().loadImage(WHOLE_PATH T_PNG);
+
+    Audio[ROTATE] = Utils :: getInstance().loadSoundEffect(AUDIO_ROTATE_PATH);
+    Audio[MOVE] = Utils :: getInstance().loadSoundEffect(AUDIO_MOVE_PATH);
+    Audio[LINE_CLEAR] = Utils :: getInstance().loadSoundEffect(AUDIO_LINECLEAR_PATH);
+    Audio[HOLD] = Utils :: getInstance().loadSoundEffect(AUDIO_HOLD_PATH);
+    Audio[HARD_DROP] = Utils :: getInstance().loadSoundEffect(AUDIO_HARDDROP_PATH);
+    Audio[LOCK] = Utils :: getInstance().loadSoundEffect(AUDIO_LOCK_PATH);
+    Audio[GAMEOVER] = Utils :: getInstance().loadSoundEffect(AUDIO_GAMEOVER_PATH);
 
     SDL_Color color = {255, 255, 255, 255};
     Text[PLAY] = Utils :: getInstance().loadText("PLAY", color);
@@ -184,6 +193,14 @@ void AssetManager :: RenderLockedBlock(int x, int y, int color) {
     SDL_RenderCopy(Utils :: getInstance().getRenderer(), Locked_Block[color], NULL, &RectLayout :: getInstance().getBlockRect(x, y));
 }
 
+void AssetManager :: OpenBackgroundMusic() {
+    Mix_PlayMusic(Utils :: getInstance().getMusic(), -1);    
+}
+
+void AssetManager :: OpenSoundEffect(AudioType sound) {
+    Mix_PlayChannel(-1, Audio[sound], 0);
+}
+
 void AssetManager ::  clean() {
     for (auto &pair : Image) {
         SDL_DestroyTexture(pair.second);
@@ -213,6 +230,11 @@ void AssetManager ::  clean() {
         SDL_DestroyTexture(pair.second);
     }
 
+    for (auto &pair : Audio) {
+        Mix_FreeChunk(pair.second);
+    }
+
+    Audio.clear();
     High_Score.clear();
     Locked_Block.clear();
     Whole_Block.clear();
@@ -221,3 +243,5 @@ void AssetManager ::  clean() {
     Image.clear();
     Text.clear();
 }
+
+

@@ -28,6 +28,16 @@ enum TextureType {
     LINES = 8
 };
 
+enum AudioType {
+    ROTATE = 1,
+    MOVE = 2,
+    LINE_CLEAR = 3,
+    HOLD = 4,
+    HARD_DROP = 5,
+    LOCK = 6,
+    GAMEOVER = 7
+};
+
 enum BlockType {
     I = 1,
     Z = 2,
@@ -52,7 +62,8 @@ class AssetManager {
         void RenderNormalBlock(int x, int y, int color);
         void RenderGhostBlock(int x, int y, int color);
         void RenderLockedBlock(int x, int y, int color);
-        SDL_Rect getRect();
+        void OpenBackgroundMusic();
+        void OpenSoundEffect(AudioType sound);
         void clean();
     private:
         AssetManager() = default;  // Constructor private
@@ -63,9 +74,9 @@ class AssetManager {
         std :: unordered_map <int, SDL_Texture*> Text;
         std :: unordered_map <int, SDL_Texture*> Normal_Block, Ghost_Block, Locked_Block, Whole_Block;
         std :: unordered_map <int, SDL_Texture*> High_Score;
+        std :: unordered_map <int, Mix_Chunk*> Audio;
         int prevScore = -1; 
-        int prelineCleared = -1;
-        int preHighScore = -1;
+        int prelineCleared = -1; 
 };
 
 #endif

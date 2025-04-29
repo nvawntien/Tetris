@@ -105,6 +105,15 @@
 #define S_PNG             "S.png"
 #define T_PNG             "T.png"
 
+#define AUDIO_PATH        "assets/audio/"
+#define AUDIO_BACKGROUND_PATH AUDIO_PATH "backgroundmusic.mp3"
+#define AUDIO_GAMEOVER_PATH   AUDIO_PATH "gameover.mp3"
+#define AUDIO_HARDDROP_PATH   AUDIO_PATH "harddrop.mp3"
+#define AUDIO_HOLD_PATH       AUDIO_PATH "hold.mp3"
+#define AUDIO_LOCK_PATH       AUDIO_PATH "lock.mp3"
+#define AUDIO_MOVE_PATH       AUDIO_PATH "move.mp3"
+#define AUDIO_ROTATE_PATH     AUDIO_PATH "rotate.mp3"
+#define AUDIO_LINECLEAR_PATH  AUDIO_PATH "lineclear.mp3"
 
 #define FONTS_PATH        "assets/font/" 
 #define HIGHSCORE_PATH    "highscore.txt"

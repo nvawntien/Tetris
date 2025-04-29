@@ -33,6 +33,7 @@ bool Game::Menu() {
     isGameOverRunning = true;
     level = 1;
     ResetGame();
+    Mix_HaltMusic();
 
     SDL_Event event;
     const SDL_Rect& playRect = RectLayout::getInstance().getButtonPlayRect();
@@ -69,6 +70,7 @@ bool Game::Menu() {
                     if (event.button.button == SDL_BUTTON_LEFT) {
                         if (playState == DOWN && SDL_PointInRect(&mousePoint, &playRect)) {
                             gameState = PLAYING;
+                            AssetManager :: getInstance().OpenBackgroundMusic();
                             isMenuRunning = false;
                         }
 
@@ -120,7 +122,7 @@ void Game :: Event() {
     while (SDL_PollEvent(&event)) {
        if (event.type == SDL_QUIT) {
             running = false;
-            isGameRunning = false;
+            isGameRunning = false; 
        }
        else if (event.type == SDL_MOUSEMOTION) {
             pauseState = SDL_PointInRect(&mousePoint, &pauseRect) ? HOVER : NORMAL;
@@ -134,6 +136,7 @@ void Game :: Event() {
             if (event.button.button == SDL_BUTTON_LEFT) {
                 if (pauseState == DOWN && SDL_PointInRect(&mousePoint, &pauseRect)) {
                     gameState = PAUSING;
+                    Mix_PauseMusic();
                     isGameRunning = false;
                 }
             }
@@ -144,20 +147,26 @@ void Game :: Event() {
             {
             case SDLK_RIGHT:
                 move_x = 1;
+                AssetManager :: getInstance().OpenSoundEffect(MOVE);
                 break;
             case SDLK_LEFT:
                 move_x = -1;
+                AssetManager :: getInstance().OpenSoundEffect(MOVE);
                 break;
             case SDLK_DOWN:
                 delay = 0;
+                AssetManager :: getInstance().OpenSoundEffect(MOVE);
                 break;
             case SDLK_UP:
                 rotate = true;
+                AssetManager :: getInstance().OpenSoundEffect(ROTATE);
                 break;
             case SDLK_SPACE:
                 hardDrop = true;
+                AssetManager :: getInstance().OpenSoundEffect(HARD_DROP);
                 break;
             case SDLK_c:
+                AssetManager :: getInstance().OpenSoundEffect(HOLD);
                 if (!holdUsed) {
                     PerformHoldBlock();
                     holdUsed = true;
@@ -231,6 +240,7 @@ void Game :: clearFullLines() {
         }
 
         if (full) {
+            AssetManager :: getInstance().OpenSoundEffect(LINE_CLEAR);
             currentlinesCleared++;
             // dời tất cả dòng bên trên xuống dưới
             for (int row = y; row > 0; row--) {
@@ -273,6 +283,7 @@ void Game :: checkGameOver() {
     if (game_over_count == CELL_HEIGHT) {
         isGameRunning = false;
         gameState = GAME_OVER;
+        AssetManager :: getInstance().OpenSoundEffect(GAMEOVER);
         Utils :: getInstance().updateHighScores(score, highScores);
         Utils :: getInstance().saveHighScores(HIGHSCORE_PATH, highScores);
     }
@@ -378,6 +389,7 @@ bool Game :: GamePause() {
                     if (event.button.button == SDL_BUTTON_LEFT) {
                         if (resumeState == DOWN && SDL_PointInRect(&mousePoint, &resumeRect)) {
                             gameState = PLAYING;
+                            Mix_ResumeMusic();
                             isPauseRunning = false;
                         }
 
@@ -404,6 +416,7 @@ bool Game :: GamePause() {
 }
 
 bool Game :: GameOver() {
+    Mix_HaltMusic();
     isMenuRunning = true;
     isGameRunning = true;
     isPauseRunning = true;
